@@ -20,8 +20,11 @@ The dataset used in this project is sourced from Prosper, a peer-to-peer lending
      SELECT
          DATE_FORMAT(LoanOriginationDate, '%Y-%m-01 00:00:00') AS month,
          DATE_FORMAT(LoanOriginationDate, '%Y') AS year,
-         SUM(LoanOriginalAmount) AS total_disbursed,
-         ROUND(SUM(LP_CustomerPayments), 0) AS total_paid
+         SUM(LoanOriginalAmount) AS total_dis,
+         ROUND(SUM(LP_CustomerPayments), 0) AS total_paid,
+         ROUND(AVG(EstimatedReturn), 2) AS profit,
+         ROUND(AVG(EstimatedLoss), 2) AS lossrate,
+         ROUND(AVG(DebtToIncomeRatio), 2) AS debtincome
      FROM 
          bank_full.prosperloandata
      WHERE 
@@ -33,47 +36,6 @@ The dataset used in this project is sourced from Prosper, a peer-to-peer lending
      ```
    - **Key Findings**: Identified monthly and yearly trends in loan disbursement and repayment, highlighting periods of increased lending activity and repayment volumes.
 
-### 2. **Profitability Analysis**
-   - **Objective**: To assess the average profitability and loss rates of loans over time.
-   - **SQL Query**:
-     ```sql
-     -- Calculate average profit and loss rates
-     SELECT
-         DATE_FORMAT(LoanOriginationDate, '%Y-%m-01 00:00:00') AS month,
-         DATE_FORMAT(LoanOriginationDate, '%Y') AS year,
-         ROUND(AVG(EstimatedReturn), 2) AS average_profit,
-         ROUND(AVG(EstimatedLoss), 2) AS average_loss_rate
-     FROM 
-         bank_full.prosperloandata
-     WHERE 
-         LoanOriginationDate > '2009-12-31'
-     GROUP BY 
-         month, year
-     ORDER BY 
-         month;
-     ```
-   - **Key Findings**: Revealed trends in profitability and loss rates, indicating the effectiveness of lending strategies and potential risk areas.
-
-### 3. **Debt-to-Income Ratio Analysis**
-   - **Objective**: To understand the relationship between borrowers' debt-to-income ratios and loan performance.
-   - **SQL Query**:
-     ```sql
-     -- Calculate average debt-to-income ratio
-     SELECT
-         DATE_FORMAT(LoanOriginationDate, '%Y-%m-01 00:00:00') AS month,
-         DATE_FORMAT(LoanOriginationDate, '%Y') AS year,
-         ROUND(AVG(DebtToIncomeRatio), 2) AS average_debt_income_ratio
-     FROM 
-         bank_full.prosperloandata
-     WHERE 
-         LoanOriginationDate > '2009-12-31'
-     GROUP BY 
-         month, year
-     ORDER BY 
-         month;
-     ```
-   - **Key Findings**: Analyzed how borrowers' financial health, as indicated by their debt-to-income ratios, impacts loan repayment and default rates.
-
 ## Key Findings
 - **Loan Trends**: There are identifiable patterns in loan disbursement and repayments, with certain months showing higher activity, potentially influenced by seasonal factors or economic conditions.
 - **Profitability**: Average profits from loans have shown variability over time, suggesting changes in interest rates, borrower quality, or lending strategies.
@@ -81,4 +43,5 @@ The dataset used in this project is sourced from Prosper, a peer-to-peer lending
 
 ## Conclusion
 The analysis provides valuable insights into loan performance trends, profitability, and risk factors within Prosper's lending ecosystem. Understanding these dynamics can help Prosper optimize its lending strategies, improve risk management, and enhance overall profitability.
+
 
